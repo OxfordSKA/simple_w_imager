@@ -120,7 +120,9 @@ def generate_w_kernel(w, image_size, fov, over_sample=4, max_size=2560,
                        extended FoV.
     
     Returns:
-        numpy.array containing the u,v plane tapered w-kernel w(u, v)
+        tuple (numpy.array, int)
+          numpy.array containing the u,v plane tapered w-kernel w(u, v)
+          support size of the kernel.
     """
     # Evaluate w phase screen.
     if padded:
@@ -144,7 +146,7 @@ def generate_w_kernel(w, image_size, fov, over_sample=4, max_size=2560,
     c_uv = np.fft.fftshift(np.fft.fft2(np.fft.fftshift(c_lm)))
     c_uv /= np.max(np.abs(c_uv))
 
-    # Work out GCF clipping indices.
+    # Work out kernel clipping indices for specified cut level.
     size = c_uv.shape[0]
     centre = size // 2
     cut_idx0 = np.argmax(np.abs(c_uv[centre, :]) > cut_level)
@@ -152,7 +154,6 @@ def generate_w_kernel(w, image_size, fov, over_sample=4, max_size=2560,
     w_uv_width = cut_idx1 - cut_idx0 - 1
     w_uv_width = math.ceil(float(w_uv_width) / over_sample)
     support = (w_uv_width - 1) // 2
-    # support = 50
     c0 = centre - support * over_sample - over_sample / 2
     c1 = centre + support * over_sample + over_sample / 2
     c0, c1 = int(c0), int(c1)

@@ -16,7 +16,7 @@ def fov_to_cell_size(fov, im_size):
         im_size (int): Image size (1D) in pixels.
 
     Returns:
-        double: pixel size, in arcsec.
+        float: pixel size, in arcsec.
     """
     r_max = math.sin(math.radians(fov) / 2)
     inc = r_max / (0.5 * im_size)
@@ -24,13 +24,32 @@ def fov_to_cell_size(fov, im_size):
 
 
 def cell_size_to_fov(cell_size, im_size):
-    """Obtain image fov from cell size and image size."""
+    """Obtain image fov from cell size and image size.
+    
+    Args:
+        cell_size (float): Cell size, in arcseconds.
+        im_size (int): Image size, in pixels.
+    
+    Returns:
+        float, The image FoV, in degrees.
+    """
     inc = math.sin(math.radians(cell_size / 3600))
     r_max = inc * (0.5 * im_size)
     return math.degrees(2.0 * math.asin(r_max))
 
 
 def plot_image(image, title=None, cbar_label=None, filename=None, extent=None):
+    """Utility function to plot a image.
+   
+    Args:
+        image (numpy.array, complex): Complex image / 2d-array to be plotted.
+        title (str, optional): Plot title.
+        cbar_label (str, optional): Color bar label
+        filename (str, optional): If specified, save the plot to this file 
+                                  instead of displaying the plot.
+        extent (list, optional): If specified the extent of the plot axis labels
+                                 [x_min, x_max, y_min, y_max]
+    """
     if extent is None:
         size = image.shape[0]
         extent = [-size // 2 - 0.5, size // 2 - 1 + 0.5,
@@ -56,6 +75,17 @@ def plot_image(image, title=None, cbar_label=None, filename=None, extent=None):
 
 
 def plot_cimage(image, title=None, cbar_label=None, filename=None, extent=None):
+    """Utility function to plot a complex image.
+    
+    Args:
+        image (numpy.array, complex): Complex image / 2d-array to be plotted.
+        title (str, optional): Plot title.
+        cbar_label (str, optional): Color bar label
+        filename (str, optional): If specified, save the plot to this file 
+                                  instead of displaying the plot.
+        extent (list, optional): If specified the extent of the plot axis labels
+                                 [x_min, x_max, y_min, y_max]
+    """
     if extent is None:
         size = image.shape[0]
         extent = [-size // 2 - 0.5, size // 2 - 1 + 0.5,
@@ -88,6 +118,17 @@ def plot_cimage(image, title=None, cbar_label=None, filename=None, extent=None):
 
 
 def plot_line(y, x=None, title=None, filename=None):
+    """Utility function to generate a line plot.
+
+        Args:
+            y (numpy.array, 1d): y data array to be plotted.
+            x (numpy.array, optional): If specified, the x data. Otherwise
+                                       The x data values are assumes to be an 
+                                       integer range from 0 to y.size.
+            title (str, optional): Plot title.
+            filename (str, optional): If specified, save the plot to this file 
+                                      instead of displaying the plot.
+    """
     fig, ax = plt.subplots(figsize=(6, 5))
     if x is None:
         x = np.arange(-y.shape[0]//2, y.shape[0]//2)
@@ -103,6 +144,20 @@ def plot_line(y, x=None, title=None, filename=None):
 
 
 def plot_semilogy(y, x=None, title=None, filename=None, y_lim=None, x1=None):
+    """Utility function to generate a line plot with a log y axis.
+    
+    Args:
+        y (numpy.array, 1d): y data array to be plotted.
+        x (numpy.array, optional): If specified, the x data. Otherwise
+                                   The x data values are assumes to be an 
+                                   integer range from 0 to y.size.
+        title (str, optional): Plot title.
+        filename (str, optional): If specified, save the plot to this file 
+                                  instead of displaying the plot.
+        y_lim (list, optional): y range of the axis [y_min, y_max]
+        x1 (float, optional): If specified plot a vertical guide line at this
+                              x position.
+    """
     fig, ax = plt.subplots(figsize=(6, 5))
     if x is None:
         x = np.arange(-y.shape[0]//2, y.shape[0]//2)
@@ -121,15 +176,3 @@ def plot_semilogy(y, x=None, title=None, filename=None, y_lim=None, x1=None):
         fig.savefig(filename)
     else:
         plt.show()
-
-
-def plot_cimage_2(cimage, title=None, cbar_label=None, filename=None,
-                 extent=None):
-    plot_image(np.real(cimage), title='Real ( %s )' % title,
-               cbar_label=cbar_label,
-               filename = filename,
-               extent = extent)
-    plot_image(np.imag(cimage), title='Imag ( %s )' % title,
-               cbar_label=cbar_label,
-               filename = filename,
-               extent = extent)
