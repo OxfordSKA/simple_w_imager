@@ -9,13 +9,13 @@ from .utils import plot_image, plot_cimage
 
 def kernel_dims(fov, image_size, max_size, over_sample):
     """Return key kernel dimensions.
-    
+
     Args:
         fov (float): Image field-of-view, in degrees.
         image_size (int): Image size, in pixels.
         max_size (int): max size of the kernel, in pixels.
         over_sample (int): Kernel over-sample, points per grid cell.
-    
+
     Returns:
         tuple: (kernel lm cellsize, outer kernel size, inner kernel size)
     """
@@ -64,7 +64,7 @@ def w_kernel_lm_padded(w, image_size, fov, over_sample=4, max_size=2560):
         fov (float): Image field of view, in degrees.
         over_sample (int): kernel over-sample factor.
         max_size (int): max kernel size, in pixels.
-        
+
     Returns:
         numpy.array containing the image plane w phase screen w(l, m)
     """
@@ -87,11 +87,11 @@ def w_kernel_lm_padded(w, image_size, fov, over_sample=4, max_size=2560):
 
 def exp_taper(size, fwhm):
     """Gaussian taper function.
-    
+
     Args:
         size (int): Size of the taper function, in pixels.
         fwhm (float): FHWM of the taper, in pixels.
-    
+
     Returns:
         numpy.array containing the taper fuction.
     """
@@ -104,12 +104,12 @@ def exp_taper(size, fwhm):
 def generate_w_kernel(w, image_size, fov, over_sample=4, max_size=2560,
                       fwhm_fov_fraction=0.4, cut_level=1e-3, padded=False):
     """Generate uv plane w-projection kernel.
-    
+
     Args:
         w (float): w-coordinate value for the kernel, in wavelengths
         image_size (int): Image size, in pixels
         fov (float): Image FoV, in degrees.
-        over_sample (int): Kernel over-sample. ie. number of points per grid 
+        over_sample (int): Kernel over-sample. ie. number of points per grid
                            cell.
         max_size (int): Maximum size of the kernel, in pixels.
         fwhm_fov_fraction (float): Fraction of the FoV used for the FWHM of the
@@ -118,7 +118,7 @@ def generate_w_kernel(w, image_size, fov, over_sample=4, max_size=2560,
         padded (bool): If true generate a zero padded kernel, if false
                        evaluate the kernel all the way out to the edge of the
                        extended FoV.
-    
+
     Returns:
         tuple (numpy.array, int)
           numpy.array containing the u,v plane tapered w-kernel w(u, v)

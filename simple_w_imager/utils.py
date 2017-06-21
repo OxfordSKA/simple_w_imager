@@ -25,11 +25,11 @@ def fov_to_cell_size(fov, im_size):
 
 def cell_size_to_fov(cell_size, im_size):
     """Obtain image fov from cell size and image size.
-    
+
     Args:
         cell_size (float): Cell size, in arcseconds.
         im_size (int): Image size, in pixels.
-    
+
     Returns:
         float, The image FoV, in degrees.
     """
@@ -38,14 +38,16 @@ def cell_size_to_fov(cell_size, im_size):
     return math.degrees(2.0 * math.asin(r_max))
 
 
-def plot_image(image, title=None, cbar_label=None, filename=None, extent=None):
+def plot_image(image, title=None, cbar_label=None, filename=None, extent=None,
+               figsize=(8, 4), xlabel=None, ylabel=None, xlim=None,
+               ylim=None):
     """Utility function to plot a image.
-   
+
     Args:
         image (numpy.array, complex): Complex image / 2d-array to be plotted.
         title (str, optional): Plot title.
         cbar_label (str, optional): Color bar label
-        filename (str, optional): If specified, save the plot to this file 
+        filename (str, optional): If specified, save the plot to this file
                                   instead of displaying the plot.
         extent (list, optional): If specified the extent of the plot axis labels
                                  [x_min, x_max, y_min, y_max]
@@ -54,7 +56,7 @@ def plot_image(image, title=None, cbar_label=None, filename=None, extent=None):
         size = image.shape[0]
         extent = [-size // 2 - 0.5, size // 2 - 1 + 0.5,
                   -size // 2 - 0.5, size // 2 - 1 + 0.5]
-    fig, ax = plt.subplots(figsize=(6, 5))
+    fig, ax = plt.subplots(figsize=figsize)
     im = ax.imshow(image, interpolation='nearest', extent=extent,
                    origin='lower')
     divider = make_axes_locatable(ax)
@@ -63,25 +65,34 @@ def plot_image(image, title=None, cbar_label=None, filename=None, extent=None):
     cbar.ax.tick_params(labelsize='small')
     ticks = np.linspace(image.min(), image.max(), 5)
     cbar.set_ticks(ticks, update_ticks=True)
-    ax.grid()
+    # ax.grid()
     if cbar_label:
         cbar.set_label(cbar_label)
     if title:
         ax.set_title(title)
+    if xlabel:
+        ax.set_xlabel(xlabel)
+    if ylabel:
+        ax.set_ylabel(ylabel)
+    if xlim:
+        ax.set_xlim(xlim)
+    if ylim:
+        ax.set_ylim(ylim)
     if filename:
-        fig.savefig(filename)
+        fig.savefig(filename, dpi=200, transparent=True)
     else:
         plt.show()
 
 
-def plot_cimage(image, title=None, cbar_label=None, filename=None, extent=None):
+def plot_cimage(image, title=None, cbar_label=None, filename=None, extent=None,
+                figsize=(8, 4)):
     """Utility function to plot a complex image.
-    
+
     Args:
         image (numpy.array, complex): Complex image / 2d-array to be plotted.
         title (str, optional): Plot title.
         cbar_label (str, optional): Color bar label
-        filename (str, optional): If specified, save the plot to this file 
+        filename (str, optional): If specified, save the plot to this file
                                   instead of displaying the plot.
         extent (list, optional): If specified the extent of the plot axis labels
                                  [x_min, x_max, y_min, y_max]
@@ -90,7 +101,7 @@ def plot_cimage(image, title=None, cbar_label=None, filename=None, extent=None):
         size = image.shape[0]
         extent = [-size // 2 - 0.5, size // 2 - 1 + 0.5,
                   -size // 2 - 0.5, size // 2 - 1 + 0.5]
-    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(8, 4))
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=figsize)
     fig.subplots_adjust(left=0.08, bottom=0.08, right=0.92, top=0.92,
                         wspace=0.4, hspace=None)
     for i, ax in enumerate(axes):
@@ -123,10 +134,10 @@ def plot_line(y, x=None, title=None, filename=None):
         Args:
             y (numpy.array, 1d): y data array to be plotted.
             x (numpy.array, optional): If specified, the x data. Otherwise
-                                       The x data values are assumes to be an 
+                                       The x data values are assumes to be an
                                        integer range from 0 to y.size.
             title (str, optional): Plot title.
-            filename (str, optional): If specified, save the plot to this file 
+            filename (str, optional): If specified, save the plot to this file
                                       instead of displaying the plot.
     """
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -145,14 +156,14 @@ def plot_line(y, x=None, title=None, filename=None):
 
 def plot_semilogy(y, x=None, title=None, filename=None, y_lim=None, x1=None):
     """Utility function to generate a line plot with a log y axis.
-    
+
     Args:
         y (numpy.array, 1d): y data array to be plotted.
         x (numpy.array, optional): If specified, the x data. Otherwise
-                                   The x data values are assumes to be an 
+                                   The x data values are assumes to be an
                                    integer range from 0 to y.size.
         title (str, optional): Plot title.
-        filename (str, optional): If specified, save the plot to this file 
+        filename (str, optional): If specified, save the plot to this file
                                   instead of displaying the plot.
         y_lim (list, optional): y range of the axis [y_min, y_max]
         x1 (float, optional): If specified plot a vertical guide line at this
