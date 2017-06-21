@@ -79,12 +79,19 @@ def plot_kernels(w):
     # plot_cimage(c_lm_plot,
     #             filename=filename, extent=extent, figsize=(12, 10),
     #             title='w = {}'.format(w))
-    filename = 'r_lm_w{}.png'.format(w)
     print(extent)
+    filename = 'r_lm_w{}.png'.format(w)
+
     # filename = None
     plot_image(np.real(c_lm_plot),
                filename=filename, extent=extent, figsize=(6, 6),
                title='w = {}'.format(w), xlabel='l', ylabel='m')
+    filename = 'i_lm_w{}.png'.format(w)
+    plot_image(np.imag(c_lm_plot),
+               filename=filename, extent=extent, figsize=(6, 6),
+               title='w = {}'.format(w), xlabel='l', ylabel='m')
+
+
 
     # FFT to uv plane and normalise
     c_uv = np.fft.fftshift(np.fft.fft2(np.fft.fftshift(c_lm)))
@@ -107,13 +114,23 @@ def plot_kernels(w):
     cell_uv /= over_sample
     uv_max = w_uv.shape[0] // 2 * cell_uv
     print(uv_max)
-    filename = 'r_uv_w{}.png'.format(w)
+
     extent = extent_uv(fov * over_sample, w_uv.shape[0])
     print(extent)
+    filename = 'r_uv_w{}.png'.format(w)
     plot_image(np.real(w_uv),
                filename=filename, extent=extent, figsize=(6, 6),
                title='w = {}'.format(w), xlabel='uu (lambda)',
                ylabel='vv (lambda)', xlim=[-300, 300], ylim=[-300, 300])
+
+    filename = 'i_uv_w{}.png'.format(w)
+    plot_image(np.imag(w_uv),
+               filename=filename, extent=extent, figsize=(6, 6),
+               title='w = {}'.format(w), xlabel='uu (lambda)',
+               ylabel='vv (lambda)', xlim=[-300, 300], ylim=[-300, 300])
+
+
+
     #
     #
     # plot_cimage(w_uv)
